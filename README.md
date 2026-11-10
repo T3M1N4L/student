@@ -1,8 +1,8 @@
 # Student · Finals
 
-A focused final-exam calculator connected to StudentVUE. Uses the existing Student typography, rounded cards, neutral sidebar, and purple accents.
+A focused final-exam calculator connected to StudentVUE. Uses locally hosted Geist, a pure black AMOLED background, and minimal monochrome controls.
 
-Choose a district by ZIP code or StudentVUE URL, sign in, select a class and grade mark, then explore how a final score changes the course grade. Set a target percentage to calculate the minimum exam score needed. Reporting periods, grade refresh, light/dark themes, and mobile layouts are supported.
+Choose a district by ZIP code or StudentVUE URL, sign in, select a class and grade mark, then explore how a final score changes the course grade. Set a target percentage to calculate the minimum exam score needed. Reporting periods, grade refresh, and mobile layouts are supported.
 
 ## Development
 
