@@ -159,7 +159,7 @@ function LoginFlow({ onLogin }: { onLogin: (creds: Credentials) => Promise<void>
 }
 
 function CourseCalculator({ course }: { course: FinalCourse }) {
-  const [markId, setMarkId] = useState(course.marks[0]?.id ?? '');
+  const [markId, setMarkId] = useState(course.marks.at(-1)?.id ?? '');
   const mark = course.marks.find(m => m.id === markId);
   return <>
     {course.marks.length > 1 && <label className="mark-selector">Grade mark
@@ -172,17 +172,17 @@ function CourseCalculator({ course }: { course: FinalCourse }) {
 }
 
 function MarkCalculator({ mark }: { mark: FinalMark }) {
-  const [current, setCurrent] = useState(initialValue(mark.currentGrade));
   const [weight, setWeight] = useState(initialValue(mark.finalWeight));
   const [score, setScore] = useState(85);
   const [target, setTarget] = useState('90');
-  const g = number(current), w = number(weight), t = number(target);
+  const g = mark.courseworkGrade === undefined ? mark.currentGrade : mark.courseworkGrade;
+  const w = number(weight), t = number(target);
   const valid = g !== null && g >= 0 && w !== null && w >= 0 && w <= 100;
   const targetValid = t !== null && t >= 0 && t <= 100;
   const result = valid ? projectedGrade(g!, w!, score) : null;
   const needed = valid && targetValid ? requiredScore(g!, w!, t!) : null;
   const auto = mark.finalWeight !== null && w === Number(mark.finalWeight.toFixed(4));
-  const message = !valid ? 'Enter your pre-final grade and a final weight from 0–100%.'
+  const message = !valid ? (g === null ? 'No verified pre-final grade available.' : 'Enter a final weight from 0–100%.')
     : !targetValid ? 'Target must be between 0% and 100%.'
     : w === 0 ? (g! >= t! ? 'Target already met. Final has no weight.' : 'Unreachable with a 0% final weight.')
     : needed! > 100 ? 'Requires more than 100% on the final.'
@@ -190,14 +190,14 @@ function MarkCalculator({ mark }: { mark: FinalMark }) {
 
   return <div className="calculator">
     <div className="grade-inputs">
-      <label htmlFor="current-grade">Grade before final
-        <div className="percent-input"><input id="current-grade" type="number" min="0" step="any" placeholder="—" value={current} onChange={e => setCurrent(e.target.value)} /><span>%</span></div>
-      </label>
+      <div className="current-grade"><span>Current grade</span>
+        <output data-testid="current-grade" title="Reported by your district">{mark.currentGrade === null ? '—' : pct(mark.currentGrade)}</output>
+      </div>
       <label htmlFor="final-weight">Final weight {auto && <span className="detected" title={mark.weightSource ?? 'Detected from district'}>Auto</span>}
         <div className="percent-input"><input id="final-weight" type="number" min="0" max="100" step="any" placeholder="—" value={weight} onChange={e => setWeight(e.target.value)} /><span>%</span></div>
       </label>
     </div>
-    {mark.finalWeight === null && <p className="hint">Final weight unavailable. Use your syllabus.</p>}
+    {mark.finalWeight === null && <p className="hint">{mark.note || 'Final weight unavailable. Use your syllabus.'}</p>}
     <section className="scenario">
       <div className="result-row">
         <label htmlFor="exam-score">Final score <strong>{score}%</strong></label>
