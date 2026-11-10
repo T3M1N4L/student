@@ -104,6 +104,7 @@ async function fetchWithTimeout(
     return await fetch(input, {
       ...(init as RequestInit),
       signal: c.signal,
+      redirect: "error",
       cache: "no-store" as const,
     });
   } finally {
@@ -284,7 +285,7 @@ export class SynergyClient {
       throw new Error("Malformed AttemptLogin response");
     }
     if (!parsed.access_token) {
-      throw new Error(`Login failed: no access token returned: ${raw}`);
+      throw new Error("Login failed: no access token returned");
     }
     this.tokens = {
       access_token: parsed.access_token,

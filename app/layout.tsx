@@ -1,58 +1,8 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
-import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Student",
-  description: "A modern StudentVUE® replacement",
-};
-
-import ClientLayout from "@/components/ClientLayout";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <head>
-        <meta name="apple-mobile-web-app-title" content="Student" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="48d436fd-4cbf-421e-bdf3-0d4354af34a0"
-        ></script>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider>
-          <ClientLayout>
-            <div>{children}</div>
-          </ClientLayout>
-        </ThemeProvider>
-        <SpeedInsights />
-        <ServiceWorkerRegister />
-      </body>
-    </html>
-  );
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import './globals.css';
+const font = localFont({ src: '../public/fonts/pp-neue-montreal/PPNeueMontreal-Regular.woff2', variable: '--font-montreal', display: 'swap' });
+export const metadata: Metadata = { title: 'Student · Finals', description: 'Plan your final. Know what you need.' };
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return <html lang="en" className={font.variable}><body>{children}</body></html>;
 }
